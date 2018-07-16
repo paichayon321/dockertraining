@@ -1,0 +1,10 @@
+# Build Image:
+git clone https://github.com/paichayon321/demophp.git
+cd demophp
+docker build -t myfirstphp .
+
+# Run Container from Image:
+docker run -d -p 8000:80 --name mycontainer myfirstphp
+
+--> Open browse: http://192.168.99.100:8000
+
