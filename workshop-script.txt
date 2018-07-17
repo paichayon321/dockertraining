@@ -1,3 +1,5 @@
+git clone https://github.com/paichayon321/dockertraining.git
+
 # Build Image:
 git clone https://github.com/paichayon321/demophp.git
 cd demophp
@@ -7,4 +9,113 @@ docker build -t myfirstphp .
 docker run -d -p 8000:80 --name mycontainer myfirstphp
 
 --> Open browse: http://192.168.99.100:8000
+
+# List ad View Container log:
+docker ps -a
+docker log myphpcontainer
+
+# Access Running Container:
+docker exec -ti myphpcontainer /bin/sh
+
+# Stop and Remove Container:
+dcoker stop mycontainer
+docker rm mycontainer
+docker ps -a
+
+# Manage Docker Images tag:
+docker images
+docker tag myfirstphp:latest paichayon/myfirstphp:latest
+
+# Push Docker Image to registry:
+docker login
+docker push paichayon/myfirstphp:latest
+
+# Remove docker images:
+docker images
+docker rmi paichayon/myfirstphp:latest
+docker images
+
+# Pull Docker images from registry:
+docker pull paichayon/myfirstphp:latest
+docker images
+docker run -d -p 8001:80 --name mycontainer2 paichayon/myfirstphp:latest
+
+# Practice Deploy asp.net application:
+git clone https://github.com/dotnet/dotnet-docker-samples.git
+
+Add:
+<h1>Hello World ! ASP.NET </h1>
+<h2>The time on server is @DateTime.Now</h2>
+
+# Real time container monitoring:
+docker stats
+
+# Resource Usage and Performance:
+Ref: https://github.com/google/cadvisor
+
+docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  google/cadvisor:latest
+
+
+# Backup and REstore docker images:
+docker images
+docker save -o myfirstphp.tar myfirstphp:latest
+
+docker rmi myfirstphp:latest
+docker load --input myfirstphp.tar
+docker images
+
+# Save running container to images:
+docker ps
+docker exec -ti mycontainer2 /bin/sh
+'Add hello.html
+
+docker commit mycontainer2 mycontainerhello:latest
+docker run -d -p 8003:80 --name mycontainer3 mycontainerhello:latest
+
+# Working with docker network:
+docker network ls
+docker network create mynetwork
+docker network ls
+docker network inspect mynetwork
+
+# Testing network with busybox:
+docker run -itd --name testnet1 busybox
+docker exec -ti testnet1 /bin/sh
+
+docker network connect mynetwork testnet1
+docker exec -ti testnet1 /bin/sh
+
+docker network disconnect bridge testnet1
+docker exec -ti testnet1 /bin/sh
+
+# Docker management UI:
+docker volume create portainer_data
+docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
