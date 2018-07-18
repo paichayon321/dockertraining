@@ -97,6 +97,16 @@ docker exec -ti testnet1 /bin/sh
 docker network disconnect bridge testnet1
 docker exec -ti testnet1 /bin/sh
 
+# Mounting a Host Directory as a Data volume:
+sudo su -
+mkdir -p /tmp/sharehtml
+echo Hello Volume > /tmp/sharehtml/index.html
+docker run -d -p 8004:80 --name mycontainer4 -v /tmp/sharehtml:/var/www/html paichayon/myfirstphp:latest
+#--> Check result http://192.168.99.100:8004
+echo Hello Volume Modify > /tmp/sharehtml/index.html
+#--> Check result http://192.168.99.100:8004
+docker exec -ti mycontainer4 /bin/sh
+
 # Docker management UI:
 docker volume create portainer_data
 docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
