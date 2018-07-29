@@ -90,12 +90,30 @@ docker network inspect mynetwork
 # Testing network with busybox:
 docker run -itd --name testnet1 busybox
 docker exec -ti testnet1 /bin/sh
+## Show ip before connect network testnet1
 
 docker network connect mynetwork testnet1
 docker exec -ti testnet1 /bin/sh
+## Show ip after connect network testnet1
 
 docker network disconnect bridge testnet1
 docker exec -ti testnet1 /bin/sh
+## Show ip after disconnect network bridge
+
+# Working with Docker Volume:
+docker volume ls
+docker volume create sharevol
+docker volume ls
+docker volume inspect sharevol
+
+# Testing Volume with busybox:
+docker run -itd --name testvol1 -v sharevol:/data busybox
+docker exec -ti testvol1 /bin/sh
+## Create some data in \data 
+
+docker run -itd --name testvol2 -v sharevol:/data busybox
+docker exec -ti testvol2 /bin/sh
+## List data in \data 
 
 # Mounting a Host Directory as a Data volume:
 sudo su -
@@ -106,6 +124,7 @@ docker run -d -p 8004:80 --name mycontainer4 -v /tmp/sharehtml:/var/www/html pai
 echo Hello Volume Modify > /tmp/sharehtml/index.html
 #--> Check result http://192.168.99.100:8004
 docker exec -ti mycontainer4 /bin/sh
+
 
 # Docker management UI:
 docker volume create portainer_data
