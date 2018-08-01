@@ -1,56 +1,49 @@
 git clone https://github.com/paichayon321/dockertraining.git
 
-# Build Image:
+# Build Image - docker build:
 git clone https://github.com/paichayon321/demophp.git
 cd demophp
 docker build -t myfirstphp .
 
-# Run Container from Image:
+# Run Container from Image - docker run:
 docker run -d -p 8000:80 --name mycontainer myfirstphp
 
 --> Open browse: http://192.168.99.100:8000
 
-# List ad View Container log:
+# List ad View Container log - docker ps & docker logs:
 docker ps -a
 docker log myphpcontainer
 
-# Access Running Container:
+# Access Running Container - docker exec:
 docker exec -ti myphpcontainer /bin/sh
 
-# Stop and Remove Container:
+# Stop and Remove Container - docker stop & docker rm:
 dcoker stop mycontainer
 docker rm mycontainer
 docker ps -a
 
-# Manage Docker Images tag:
+# Manage Docker Images tag - docker tag:
 docker images
 docker tag myfirstphp:latest paichayon/myfirstphp:latest
 
-# Push Docker Image to registry:
+# Push Docker Image to registry - docker login & docker push:
 docker login
 docker push paichayon/myfirstphp:latest
 
-# Remove docker images:
+# Remove docker images - docker rmi:
 docker images
 docker rmi paichayon/myfirstphp:latest
 docker images
 
-# Pull Docker images from registry:
+# Pull Docker images from registry - docker pull:
 docker pull paichayon/myfirstphp:latest
 docker images
 docker run -d -p 8001:80 --name mycontainer2 paichayon/myfirstphp:latest
 
-# Practice Deploy asp.net application:
-git clone https://github.com/dotnet/dotnet-docker-samples.git
-
-Add:
-<h1>Hello World ! ASP.NET </h1>
-<h2>The time on server is @DateTime.Now</h2>
-
-# Real time container monitoring:
+# Real time container monitoring - docker stats:
 docker stats
 
-# Resource Usage and Performance:
+# Resource Usage and Performance - cAdvisor:
 Ref: https://github.com/google/cadvisor
 
 docker run \
@@ -64,8 +57,7 @@ docker run \
   --name=cadvisor \
   google/cadvisor:latest
 
-
-# Backup and REstore docker images:
+# Backup and Restore docker images - docker save & docker load:
 docker images
 docker save -o myfirstphp.tar myfirstphp:latest
 
@@ -73,13 +65,20 @@ docker rmi myfirstphp:latest
 docker load --input myfirstphp.tar
 docker images
 
-# Save running container to images:
+# Save running container to images - docker commit:
 docker ps
 docker exec -ti mycontainer2 /bin/sh
 'Add hello.html
 
 docker commit mycontainer2 mycontainerhello:latest
 docker run -d -p 8003:80 --name mycontainer3 mycontainerhello:latest
+
+# Practice Deploy asp.net application:
+git clone https://github.com/dotnet/dotnet-docker-samples.git
+
+Add:
+<h1>Hello World ! ASP.NET </h1>
+<h2>The time on server is @DateTime.Now</h2>
 
 # Working with docker network:
 docker network ls
@@ -116,6 +115,7 @@ docker exec -ti testvol2 /bin/sh
 ## List data in \data 
 
 # Mounting a Host Directory as a Data volume:
+# Open SSH terminal putty and logon with User=docker , Password= tcuser
 sudo su -
 mkdir -p /tmp/sharehtml
 echo Hello Volume > /tmp/sharehtml/index.html
@@ -125,20 +125,49 @@ echo Hello Volume Modify > /tmp/sharehtml/index.html
 #--> Check result http://192.168.99.100:8004
 docker exec -ti mycontainer4 /bin/sh
 
+#Testing Resource Limit with busybox:
+docker run -itd --name testlimit --memory=512m --memory-reservation 128m --cpuset-cpus 0 --cpus="0.2" busybox
+## Generate CPU load (--cpus = cores * % cpu-request)
+docker exec -ti testlimit /bin/sh
+## cat /dev/urandom > /dev/null
+## Check result on cadvisor
 
 # Docker management UI:
 docker volume create portainer_data
 docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 
+# Build Docker Image  with Alpine linux:
+git clone https://github.com/paichayon321/alpinephp.git
+cd alpinephp
+ls -la
+cat Dockerfile
+cat index.php
+docker build -t myphpalpine:latest .
+docker images
+docker run -d -p 8005:80 --name myalpinecontainer myphpalpine:latest
+
+# Enable Insecure Registry with DockerTool Box:
+docker-machine ssh
+sudo vi /var/lib/boot2docker/profile
+## Add --insecure-registry harbor.180.222.156.220.xip.io at EXTRA_ARGS
+EXTRA_ARGS='
+--label provider=virtualbox
+--insecure-registry harbor.180.222.156.220.xip.io
+##
+exit
+
+docker-machine restart
 
 
+# Docker Image Scanning – Harbor registry:
+docker login -u demo -p DockerTraining123 harbor.180.222.156.220.xip.io
+docker tag myphpalpine:latest harbor.180.222.156.220.xip.io/training/myphpalpine:latest
+docker push harbor.180.222.156.220.xip.io/training/myphpalpine:latest
 
+docker tag myfirstphp:latest harbor.180.222.156.220.xip.io/training/myfirstphp:latest
+docker push harbor.180.222.156.220.xip.io/training/myfirstphp:latest
 
-
-
-
-
-
+Harbor Registry URL: https://harbor.180.222.156.220.xip.io
 
 
 
