@@ -114,7 +114,7 @@ docker run -itd --name testvol2 -v sharevol:/data busybox
 docker exec -ti testvol2 /bin/sh
 ## List data in \data 
 
-# Mounting a Host Directory as a Data volume:
+# Mounting a Host Directory as a DataÂ volume:
 # Open SSH terminal putty and logon with User=docker , Password= tcuser
 sudo su -
 mkdir -p /tmp/sharehtml
@@ -159,8 +159,8 @@ exit
 docker-machine restart
 
 
-# Docker Image Scanning – Harbor registry:
-docker login -u demo -p DockerTraining123 harbor.180.222.156.220.xip.io
+# Docker Image Scanning â€“ Harbor registry:
+docker login harbor.180.222.156.220.xip.io
 docker tag myphpalpine:latest harbor.180.222.156.220.xip.io/training/myphpalpine:latest
 docker push harbor.180.222.156.220.xip.io/training/myphpalpine:latest
 
